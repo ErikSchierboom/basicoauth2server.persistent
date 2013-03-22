@@ -1,0 +1,16 @@
+﻿@model dynamic
+
+@{
+    ViewBag.Title = "Workflow tester";
+}
+
+<hgroup class="title">
+    <h1>@ViewBag.Title.</h1>
+</hgroup>
+
+<p>This website hosts an OAuth 2 server that you can connect to for testing purposes. If you just want to see how the workflows work, we have created a page in for each of the three workflows on which you can test the workflow:</p>
+
+<ul>
+    <li>@Html.ActionLink("Client credentials workflow tester", "ClientCredentialsGrant", "Home")</li>
+    <li>@Html.ActionLink("Resource owner credentials workflow tester", "ResourceOwnerCredentialsGrant", "Home")</li>
+</ul>

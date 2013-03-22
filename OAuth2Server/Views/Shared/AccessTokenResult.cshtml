@@ -1,0 +1,37 @@
+﻿@using DotNetOpenAuth.OAuth2
+
+<section>
+
+    @if (ViewBag.AccessToken != null)
+    {
+        var accessToken = (AuthorizationState)ViewBag.AccessToken;
+    
+        <p>
+            The access token was retrieved:
+        </p>
+    
+        <dl>
+            <dt>Access token</dt>
+            <dd>@accessToken.AccessToken</dd>
+        
+            @if (!string.IsNullOrEmpty(accessToken.RefreshToken))
+            {
+                <dt>Refresh token</dt>
+                <dd>@accessToken.RefreshToken</dd>
+            }
+        
+            <dt>Expiration date (UTC)</dt>
+            <dd>@accessToken.AccessTokenExpirationUtc</dd>
+        
+            <dt>Scope(s)</dt>
+            <dd>@OAuthUtilities.JoinScopes(accessToken.Scope)</dd>
+        </dl>
+    }
+    else if (ViewBag.Exception != null)
+    {
+        <p>
+            An error occured while retrieving the access token: @(((Exception)ViewBag.Exception).ToString())
+        </p>
+    }
+    
+</section>
