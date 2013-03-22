@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Generic;
     using System.Security.Cryptography;
-    using System.Web;
 
     using DotNetOpenAuth.Messaging.Bindings;
     using DotNetOpenAuth.OAuth2;
@@ -121,9 +120,9 @@
             // We use a hard-code client identifier and secret. In real-life situations it is quite likely that you
             // will store your clients in a persistent store. Retrieving the client would then mean retrieving it 
             // from the store
-            if (clientIdentifier == "demo-identifier")
+            if (clientIdentifier == "demo-client-identifier")
             {
-                return new ClientDescription("demo-secret", null, ClientType.Public);    
+                return new ClientDescription("demo-client-secret", null, ClientType.Public);    
             }
 
             // If there is no client with the specified identifier, throw an ArgumentException. Note: you should
@@ -175,7 +174,7 @@
         {
             // We use a fixed username and password to determine if the username/password combination is correct. Of course, a real-life application
             // would probably use a persistent store and check if the username and password combination matches on of the stored users
-            var userCredentialsAreCorrect = userName == "demo-username" && password == "demo-password";
+            var userCredentialsAreCorrect = userName == "demo-user-name" && password == "demo-user-password";
 
             // The token request is approved when the user credentials are correct and the user is authorized for the requested scopes
             var isApproved = userCredentialsAreCorrect && UserIsAuthorizedForRequestedScopes(userName, accessRequest.Scope);
