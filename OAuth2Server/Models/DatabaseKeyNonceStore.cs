@@ -1,31 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace OAuth2Server.Models
+﻿namespace OAuth2Server.Models
 {
-    /*
     using System;
     using System.Collections.Generic;
     using System.Configuration;
+    using System.Data.Linq;
     using System.Data.SqlClient;
     using System.Linq;
+
     using DotNetOpenAuth.Messaging.Bindings;
 
-    /// <summary>
-    /// A database-persisted nonce store.
-    /// </summary>
-    public class DatabaseKeyNonceStore : INonceStore, ICryptoKeyStore
-    {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DatabaseKeyNonceStore"/> class.
-        /// </summary>
-        public DatabaseKeyNonceStore()
-        {
-        }
+    using OAuth2Server.Helpers;
 
-        #region INonceStore Members
+    /// <summary>
+    /// A database-persisted nonce- and crypto key store.
+    /// </summary>
+    internal class DatabaseKeyNonceStore : INonceStore, ICryptoKeyStore
+    {
+        private readonly OAuth2ServerDbContext db = new OAuth2ServerDbContext();
 
         /// <summary>
         /// Stores a given nonce and timestamp.
@@ -52,13 +43,13 @@ namespace OAuth2Server.Models
         /// </remarks>
         public bool StoreNonce(string context, string nonce, DateTime timestampUtc)
         {
-            MvcApplication.DataContext.Nonces.InsertOnSubmit(new Nonce { Context = context, Code = nonce, Timestamp = timestampUtc });
+            this.db.Nonces.Add(new Nonce { Context = context, Code = nonce, Timestamp = timestampUtc });
             try
             {
-                MvcApplication.DataContext.SubmitChanges();
+                this.db.SaveChanges();
                 return true;
             }
-            catch (System.Data.Linq.DuplicateKeyException)
+            catch (DuplicateKeyException)
             {
                 return false;
             }
@@ -68,52 +59,44 @@ namespace OAuth2Server.Models
             }
         }
 
-        #endregion
-
-        #region ICryptoKeyStore Members
-
         public CryptoKey GetKey(string bucket, string handle)
         {
             // It is critical that this lookup be case-sensitive, which can only be configured at the database.
-            var matches = from key in MvcApplication.DataContext.SymmetricCryptoKeys
-                          where key.Bucket == bucket && key.Handle == handle
-                          select new CryptoKey(key.Secret, key.ExpiresUtc.AsUtc());
+            var cryptoKey = (from key in this.db.SymmetricCryptoKeys where key.Bucket == bucket && key.Handle == handle select key).FirstOrDefault();
 
-            return matches.FirstOrDefault();
+            if (cryptoKey == null)
+            {
+                return null;
+            }
+
+            return new CryptoKey(cryptoKey.Secret, cryptoKey.ExpiresUtc.AsUtc());
         }
 
         public IEnumerable<KeyValuePair<string, CryptoKey>> GetKeys(string bucket)
         {
-            return from key in MvcApplication.DataContext.SymmetricCryptoKeys
-                   where key.Bucket == bucket
-                   orderby key.ExpiresUtc descending
-                   select new KeyValuePair<string, CryptoKey>(key.Handle, new CryptoKey(key.Secret, key.ExpiresUtc.AsUtc()));
+            // Find all the symmetric crypto keys belonging to the specified bucket. We need to call ToEnumerable() on the
+            // result to force the query to execute. If we wouldn't do this, the statement below where the result is
+            // transformed to KeyValuePair's would fail (as the KeyValuePair class does not have a parameterless constructor)
+            var symmetricCryptoKeys = (from key in this.db.SymmetricCryptoKeys where key.Bucket == bucket orderby key.ExpiresUtc descending select key).AsEnumerable();
+            
+            return symmetricCryptoKeys.Select(k => new KeyValuePair<string, CryptoKey>(k.Handle, new CryptoKey(k.Secret, k.ExpiresUtc.AsUtc())));
         }
 
         public void StoreKey(string bucket, string handle, CryptoKey key)
         {
-            var keyRow = new SymmetricCryptoKey()
-            {
-                Bucket = bucket,
-                Handle = handle,
-                Secret = key.Key,
-                ExpiresUtc = key.ExpiresUtc,
-            };
+            var keyRow = new SymmetricCryptoKey { Bucket = bucket, Handle = handle, Secret = key.Key, ExpiresUtc = key.ExpiresUtc, };
 
-            MvcApplication.DataContext.SymmetricCryptoKeys.InsertOnSubmit(keyRow);
-            MvcApplication.DataContext.SubmitChanges();
+            this.db.SymmetricCryptoKeys.Add(keyRow);
+            this.db.SaveChanges();
         }
 
         public void RemoveKey(string bucket, string handle)
         {
-            var match = MvcApplication.DataContext.SymmetricCryptoKeys.FirstOrDefault(k => k.Bucket == bucket && k.Handle == handle);
+            var match = this.db.SymmetricCryptoKeys.FirstOrDefault(k => k.Bucket == bucket && k.Handle == handle);
             if (match != null)
             {
-                MvcApplication.DataContext.SymmetricCryptoKeys.DeleteOnSubmit(match);
+                this.db.SymmetricCryptoKeys.Remove(match);
             }
         }
-
-        #endregion
     }
-     */ 
 }

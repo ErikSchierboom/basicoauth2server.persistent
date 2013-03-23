@@ -1,0 +1,36 @@
+﻿@model IEnumerable<OAuth2Server.Models.User>
+
+@{
+    ViewBag.Title = "Users";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<table>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.OpenIDClaimedIdentifier)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.OpenIDFriendlyIdentifier)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Password)
+        </th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.OpenIDClaimedIdentifier)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.OpenIDFriendlyIdentifier)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Password)
+        </td>
+    </tr>
+}
+
+</table>

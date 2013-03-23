@@ -28,11 +28,11 @@
                                                      };
 
             // Create the client with which we will be connecting to the server.
-            var userAgentClient = new UserAgentClient(authorizationServerDescription, clientIdentifier: "demo-identifier", clientSecret: "demo-secret");
+            var userAgentClient = new UserAgentClient(authorizationServerDescription, clientIdentifier: "demo-client-1", clientSecret: "demo-client-secret-1");
 
             // The scope that we request for the client. Note: this can also be null if we don't want to request any specific 
             // scope or more than one scope if we want to request an access token that is valid for several scopes
-            var clientScopes = new[] { "demo-scope-client" };
+            var clientScopes = new[] { "demo-scope-client-1" };
 
             // Request a new client access token for the specified scopes (http://tools.ietf.org/html/draft-ietf-oauth-v2-31#section-4.4)
             // This method will use the client identifier and client secret used when constructing the UserAgentClient instance
@@ -46,10 +46,10 @@
 
             // The scope that we request for the user. Note: this can also be null if we don't want to request any specific 
             // scope or more than one scope if we want to request an access token that is valid for several scopes
-            var userScopes = new[] { "demo-scope-user" };
+            var userScopes = new[] { "demo-scope-1" };
 
             // Request a new user access token for the specified user and the specified scopes (http://tools.ietf.org/html/draft-ietf-oauth-v2-31#page-35)
-            var userAccessToken = userAgentClient.ExchangeUserCredentialForToken("demo-username", "demo-password", userScopes);
+            var userAccessToken = userAgentClient.ExchangeUserCredentialForToken("demo-user-1", "demo-user-password-1", userScopes);
 
             // Output some information about the retrieved user access token
             Console.WriteLine("\n[RETRIEVED USER ACCESS TOKEN]");
@@ -57,7 +57,12 @@
             Console.WriteLine("Refresh token: {0}", userAccessToken.RefreshToken);
             Console.WriteLine("Expiration time: {0}", userAccessToken.AccessTokenExpirationUtc);
             Console.WriteLine("Scope: {0}", OAuthUtilities.JoinScopes(userAccessToken.Scope));
-            
+
+            var refreshed = userAgentClient.RefreshAuthorization(userAccessToken);
+
+            Console.WriteLine("\n[REFRESHING USER ACCESS TOKEN]");
+            Console.WriteLine("Access token refreshed: {0}", refreshed);
+
             Console.WriteLine("\nPress any key to exit...");
             Console.ReadKey();
         }

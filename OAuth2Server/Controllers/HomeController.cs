@@ -9,7 +9,7 @@
     using OAuth2Server.ViewModels.Home;
 
     /// <summary>
-    /// This controller will server as a test client, allowing the user
+    /// This controller will server as a test client, allowing the user to test the various workflows in OAuth 2.0
     /// </summary>
     [RequireHttps]
     public class HomeController : Controller
@@ -57,7 +57,7 @@
         }
 
         /// <summary>
-        /// This action will allow the user to expirement with the OAuth 2 client credentials grant workflow. 
+        /// This action will allow the user to experiment with the OAuth 2 client credentials grant workflow. 
         /// </summary>
         /// <remarks>See: http://tools.ietf.org/html/rfc6749#section-4.4 </remarks>
         /// <returns>The view result.</returns>
@@ -65,7 +65,12 @@
         public ViewResult ClientCredentialsGrant()
         {
             // We will set-up correct default values to make it easier for the user to start testing
-            var model = new ClientCredentialsGrantViewModel { ClientId = "demo-identifier", ClientSecret = "demo-secret", Scope = "demo-scope-client" };
+            var model = new ClientCredentialsGrantViewModel
+                            {
+                                ClientId = "demo-client-1", 
+                                ClientSecret = "demo-client-secret-1", 
+                                Scope = "demo-scope-client-1"
+                            };
 
             return this.View(model);
         }
@@ -104,7 +109,7 @@
         }
 
         /// <summary>
-        /// This action will allow the user to expirement with the OAuth 2 resource owner credentials grant workflow.
+        /// This action will allow the user to experiment with the OAuth 2 resource owner credentials grant workflow.
         /// </summary>
         /// <remarks>See: http://tools.ietf.org/html/rfc6749#section-4.3 </remarks>
         /// <returns>The view result.</returns>
@@ -114,7 +119,10 @@
             // We will set-up correct default values to make it easier for the user to start testing
             var model = new ResourceOwnerCredentialsGrantViewModel
                             {
-                                Username = "demo-username", Password = "demo-password", ClientId = "demo-identifier", Scope = "demo-scope-user"
+                                Username = "demo-user-1",
+                                Password = "demo-user-password-1",
+                                ClientId = "demo-client-1",
+                                Scope = "demo-scope-1"
                             };
 
             return this.View(model);
@@ -141,7 +149,60 @@
                     var userScopes = OAuthUtilities.SplitScopes(model.Scope ?? string.Empty);
 
                     // Request a new user access token for the specified user and the specified scopes (http://tools.ietf.org/html/draft-ietf-oauth-v2-31#page-35)
-                    this.ViewBag.AccessToken = webServerClient.ExchangeUserCredentialForToken("demo-username", "demo-password", userScopes);
+                    this.ViewBag.AccessToken = webServerClient.ExchangeUserCredentialForToken(model.Username, model.Password, userScopes);
+                }
+                catch (Exception ex)
+                {
+                    this.ViewBag.Exception = ex;
+                }
+            }
+
+            return this.View(model);
+        }
+
+        /// <summary>
+        /// This action will allow the user to experiment with the OAuth 2 refresh token workflow. 
+        /// </summary>
+        /// <remarks>See: http://tools.ietf.org/html/rfc6749#section-6 </remarks>
+        /// <returns>The view result.</returns>
+        [HttpGet]
+        public ViewResult RefreshToken()
+        {
+            // We will set-up correct default values to make it easier for the user to start testing
+            var model = new RefreshTokenViewModel
+            {
+                ClientId = "demo-client-1",
+                ClientSecret = "demo-client-secret-1",
+            };
+
+            return this.View(model);
+        }
+
+        /// <summary>
+        /// This action will show the user the result of his OAuth 2 refresh token workflow request. 
+        /// </summary>
+        /// <remarks>See: http://tools.ietf.org/html/rfc6749#section-6 </remarks>
+        /// <returns>The view result.</returns>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ViewResult RefreshToken(RefreshTokenViewModel model)
+        {
+            if (this.ModelState.IsValid)
+            {
+                try
+                {
+                    // Create the client with which we will be connecting to the server.
+                    var webServerClient = new WebServerClient(this.AuthorizationServerDescription, clientIdentifier: model.ClientId, clientSecret: model.ClientSecret);
+
+                    // Create an AuthorizationState instance with only the refresh token set. This is all that is needed for
+                    // OAuth to be able to determine what token is to be refreshed
+                    var authorizationState = new AuthorizationState { RefreshToken = model.RefreshToken };
+
+                    // Refresh an access token (http://tools.ietf.org/html/draft-ietf-oauth-v2-31#section-6)
+                    // This method will use the client identifier and client secret used when constructing the WebServerAgentClient instance
+                    webServerClient.RefreshAuthorization(authorizationState);
+
+                    this.ViewBag.AccessToken = authorizationState;
                 }
                 catch (Exception ex)
                 {

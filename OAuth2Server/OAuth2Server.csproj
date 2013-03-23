@@ -65,6 +65,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Data.Linq" />
     <Reference Include="System.Data.SqlServerCe, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.SqlServer.Compact.4.0.8876.1\lib\net40\System.Data.SqlServerCe.dll</HintPath>
@@ -105,8 +106,11 @@
   <ItemGroup>
     <Compile Include="App_Start\EntityFrameworkConfig.cs" />
     <Compile Include="App_Start\RegisterClientValidationExtensions.cs" />
+    <Compile Include="Controllers\AuthorizationsController.cs" />
+    <Compile Include="Controllers\ClientsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\TokensController.cs" />
+    <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -117,11 +121,12 @@
     <Compile Include="Models\Authorization.cs" />
     <Compile Include="Models\OAuth2ServerDbContext.cs" />
     <Compile Include="Models\User.cs" />
-    <Compile Include="Models\DateTimeExtensions.cs" />
+    <Compile Include="Helpers\DateTimeUtilities.cs" />
     <Compile Include="Models\SymmetricCryptoKey.cs" />
     <Compile Include="Models\Nonce.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\Home\ClientCredentialsGrantViewModel.cs" />
+    <Compile Include="ViewModels\Home\RefreshTokenViewModel.cs" />
     <Compile Include="ViewModels\Home\ResourceOwnerCredentialsGrantViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -129,6 +134,10 @@
     <Content Include="Content\Site.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
+    <Content Include="Views\Users\Index.cshtml" />
+    <Content Include="Views\Clients\Index.cshtml" />
+    <Content Include="Views\Authorizations\Index.cshtml" />
+    <Content Include="Views\Home\RefreshToken.cshtml" />
     <None Include="_bin_deployableAssemblies\x86\sqlcese40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceqp40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceme40.dll" />

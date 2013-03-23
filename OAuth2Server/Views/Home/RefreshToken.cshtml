@@ -1,0 +1,39 @@
+﻿@model OAuth2Server.ViewModels.Home.RefreshTokenViewModel
+
+@{
+    ViewBag.Title = "Refresh token tester";
+}
+
+<h2>Submit a refresh token request</h2>
+
+<section>
+    <h2>Please enter the values you want to use.</h2>
+    @using (Html.BeginForm(new { ReturnUrl = ViewBag.ReturnUrl })) {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true)
+
+        <fieldset>
+            <legend>Refresh token request form</legend>
+            <ol>
+                <li>
+                    @Html.LabelFor(m => m.RefreshToken)
+                    @Html.TextBoxFor(m => m.RefreshToken)
+                    @Html.ValidationMessageFor(m => m.RefreshToken)
+                </li>
+                <li>
+                    @Html.LabelFor(m => m.ClientId)
+                    @Html.TextBoxFor(m => m.ClientId)
+                    @Html.ValidationMessageFor(m => m.ClientId)
+                </li>
+                <li>
+                    @Html.LabelFor(m => m.ClientSecret)
+                    @Html.TextBoxFor(m => m.ClientSecret)
+                    @Html.ValidationMessageFor(m => m.ClientSecret)
+                </li>
+            </ol>
+            <input type="submit" value="Submit request" />
+        </fieldset>
+    }
+</section>
+
+@{ Html.RenderPartial("AccessTokenResult");}

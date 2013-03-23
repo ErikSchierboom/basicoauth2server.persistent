@@ -30,5 +30,21 @@ namespace OAuth2Server.Models
         /// The authorizations.
         /// </value>
         public DbSet<Authorization> Authorizations { get; set; }
+
+        /// <summary>
+        /// Gets or sets the nonces.
+        /// </summary>
+        /// <value>
+        /// The nonces.
+        /// </value>
+        public DbSet<Nonce> Nonces { get; set; }
+
+        /// <summary>
+        /// Gets or sets the symmetric crypto keys.
+        /// </summary>
+        /// <value>
+        /// The symmetric crypto keys.
+        /// </value>
+        public DbSet<SymmetricCryptoKey> SymmetricCryptoKeys { get; set; }
     }
 }
