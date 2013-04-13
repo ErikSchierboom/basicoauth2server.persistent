@@ -9,3 +9,6 @@ Creating an OAuth 2.0 server is hard. Luckily, the [DotNetOpenAuth](http://www.d
  3. Build the solution
  4. Run the OAuth2Server website
  5. Use the website's built in test client or run the OAuth2Client application
+
+## License
+[Apache License 2.0](License.MD)
