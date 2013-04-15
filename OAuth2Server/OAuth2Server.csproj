@@ -120,11 +120,14 @@
     <Compile Include="App_Start\EntityFrameworkConfig.cs" />
     <Compile Include="App_Start\RegisterClientValidationExtensions.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\ResourcesController.cs" />
     <Compile Include="Controllers\TokensController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AuthorizationServerHost.cs" />
+    <Compile Include="Models\EncryptionKeys.cs" />
+    <Compile Include="Models\OAuthAuthorizeAttribute.cs" />
     <Compile Include="Models\OAuth2ServerDbContextInitializer.cs" />
     <Compile Include="Models\DatabaseKeyNonceStore.cs" />
     <Compile Include="Models\Client.cs" />

@@ -12,6 +12,12 @@ The OAuth2Server project contains the implementation of the OAuth 2 server that 
  4. When the `HandleTokenRequest` is called, a call is made to our [`AuthorizationServerHost`](OAuth2Server/Models/AuthorizationServerHost.cs) class (which was provided as a parameter to `AuthorizationServer`'s constructor)
  5. Depending on the type of token request, either `CheckAuthorizeResourceOwnerCredentialGrant` (for resource owner credentials grants) or `CheckAuthorizeClientCredentialsGrant` (for client credentials grants) is called
  6. In those methods we can check if the token request is valid. Our server verifies the request against the values that are stored in our database (which you can view by browsing to "/home/data").
+ 7. If everything is valid, the token is returned
+ 8. You can now use the retrieved token to access protected resources. To do this, you need to add the token to the header of the request to a protected resource. The header needs to look like this:
+
+`Authorization: bearer gAAAAA2SU9LxRK3z-i-xjMBnOHiwBE9.....`
+
+Where you need to fill in your actual access token. You can find the protected resources at "/resources/clients" (for client tokens) and "/resources/users" (for user tokens).
 
 ### Data
 The data is stored in a SQL Server Compact database that is accessed with Entity Framework. The [`OAuth2ServerDbContext`](OAuth2Server/Models/OAuth2ServerDbContext.cs) class keeps track of all the instances.
