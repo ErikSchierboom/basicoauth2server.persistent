@@ -119,11 +119,8 @@
   <ItemGroup>
     <Compile Include="App_Start\EntityFrameworkConfig.cs" />
     <Compile Include="App_Start\RegisterClientValidationExtensions.cs" />
-    <Compile Include="Controllers\AuthorizationsController.cs" />
-    <Compile Include="Controllers\ClientsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\TokensController.cs" />
-    <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -148,6 +145,7 @@
     <Content Include="Content\Site.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
+    <Content Include="Views\Home\Data.cshtml" />
     <None Include="_bin_deployableAssemblies\x86\sqlcese40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceqp40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceme40.dll" />
@@ -169,9 +167,6 @@
     <Content Include="Scripts\jquery-1.9.1.min.js" />
     <Content Include="Scripts\jquery-1.9.1.min.map" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
-    <Content Include="Views\Users\Index.cshtml" />
-    <Content Include="Views\Clients\Index.cshtml" />
-    <Content Include="Views\Authorizations\Index.cshtml" />
     <Content Include="Views\Home\RefreshToken.cshtml" />
     <None Include="Properties\PublishProfiles\oauth2demo - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\oauth2demo - Web Deploy.pubxml" />

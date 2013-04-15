@@ -1,11 +1,14 @@
 ﻿namespace OAuth2Server.Controllers
 {
     using System;
+    using System.Linq;
     using System.Net;
     using System.Web.Mvc;
+    using System.Data.Entity;
 
     using DotNetOpenAuth.OAuth2;
 
+    using OAuth2Server.Models;
     using OAuth2Server.ViewModels.Home;
 
     /// <summary>
@@ -14,6 +17,8 @@
     [RequireHttps]
     public class HomeController : Controller
     {
+        private readonly OAuth2ServerDbContext db = new OAuth2ServerDbContext();
+
         /// <summary>
         /// Initializes a new instance of the <see cref="HomeController"/> class.
         /// </summary>
@@ -211,6 +216,26 @@
             }
 
             return this.View(model);
+        }
+        
+        
+        /// <summary>
+        /// This action will show the data that is used by the authorization server. 
+        /// </summary>
+        /// <returns>The view result.</returns>
+        public ViewResult Data()
+        {
+            ViewBag.Users = this.db.Users.ToList();
+            ViewBag.Clients = this.db.Clients.ToList();
+            ViewBag.Authorizations = this.db.Authorizations.Include(a => a.Client).Include(a => a.User);
+
+            return this.View();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            this.db.Dispose();
+            base.Dispose(disposing);
         }
     }
 }

@@ -1,0 +1,130 @@
+﻿@using OAuth2Server.Models
+@using Authorization = OAuth2Server.Models.Authorization
+@model dynamic
+
+@{
+    ViewBag.Title = "Data";
+}
+
+<h2>@ViewBag.Title</h2>
+
+
+<h3>Users</h3>
+
+<table>
+    <tr>
+        <th>
+            OpenID Claimed Identifier
+        </th>
+        <th>
+            OpenID Friendly Identifier
+        </th>
+        <th>
+            Password
+        </th>
+    </tr>
+
+    @foreach (var user in (IEnumerable<User>)ViewBag.Users) 
+    {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => user.OpenIDClaimedIdentifier)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => user.OpenIDFriendlyIdentifier)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => user.Password)
+        </td>
+    </tr>
+    }
+
+</table>
+
+<h3>Clients</h3>
+
+<table>
+    <tr>
+        <th>
+            Client Identifier
+        </th>
+        <th>
+            Client Secret
+        </th>
+        <th>
+            Callback
+        </th>
+        <th>
+            Name
+        </th>
+        <th>
+            Scope
+        </th>
+    </tr>
+
+    @foreach (var client in (IEnumerable<Client>)ViewBag.Clients)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => client.ClientIdentifier)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => client.ClientSecret)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => client.Callback)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => client.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => client.Scope)
+            </td>
+        </tr>
+    }
+
+</table>
+
+<h3>Authorizations</h3>
+
+<table>
+    <tr>
+        <th>
+            Issue Date
+        </th>
+        <th>
+            Client Identifier (client)
+        </th>
+        <th>
+            OpenIDClaimedIdentifier (user)
+        </th>
+        <th>
+            Scope
+        </th>
+        <th>
+            Expiration Date (UTC)
+        </th>
+    </tr>
+
+    @foreach (var authorization in (IEnumerable<Authorization>)ViewBag.Authorizations)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(_ => authorization.IssueDate)
+            </td>
+            <td>
+                @Html.DisplayFor(_ => authorization.Client.ClientIdentifier)
+            </td>
+            <td>
+                @Html.DisplayFor(_ => authorization.User.OpenIDClaimedIdentifier)
+            </td>
+            <td>
+                @Html.DisplayFor(_ => authorization.Scope)
+            </td>
+            <td>
+                @Html.DisplayFor(_ => authorization.ExpirationDateUtc)
+            </td>
+        </tr>
+    }
+
+</table>
